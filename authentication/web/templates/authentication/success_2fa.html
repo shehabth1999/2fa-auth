@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success</title>
+</head>
+<body>
+    <h1>Success!</h1>
+    <p>Your operation was successful.</p>
+    <h3>Here some codes save it in safe place to reset your code if you lose access Authentication app</h3>
+    {% for code in codes %}
+    <p>{{code}}</p>
+    {% endfor %}
+
+    <hr/>
+    <a href="{% url 'home' %}"> Home</a>
+</body>
+</html>

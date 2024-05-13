@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enable 2FA</title>
+</head>
+<body>
+    <h1>Enable Two-Factor Authentication</h1>
+    <p>Scan the QR code below with Google Authenticator:</p>
+    <img src="{{ qr_code_url }}" alt="QR Code">
+    <p>Or manually enter the following secret key into the Google Authenticator app:</p>
+    <p>{{ secret_key }}</p>
+    <p>Once configured, enter the generated TOTP code below to verify:</p>
+    <form method="post" action="{% url 'enable_verify_2fa' %}">
+        {% csrf_token %}
+        <label for="code">Enter TOTP code:</label><br>
+        <input type="text" id="code" name="code" required><br><br>
+        <button type="submit">Verify</button>
+    </form>
+</body>
+</html>

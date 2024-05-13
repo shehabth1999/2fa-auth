@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+    <h2>Welcome to the Home Page</h2>
+    {% if user.is_authenticated %}
+        <p>Welcome, {{ user.username }}!</p>
+        <form id="loginForm" action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" value="logout"> logout </button>
+        </form >
+
+        {% if not user.factor_auth_at %}
+            <h3>Enable 2FA ? </h3>
+            <a href="{% url 'enable_2fa' %}"> enable 2fa form here</a>
+        {% else %}
+            <h3>You have 2FA </h3>
+            <a href="{% url 'disable_2fa' %}"> disable 2fa form here</a>
+        {% endif %}
+    {% else %}
+        <p>You are not logged in. <a href="{% url 'login' %}">Login </a></p>
+    {% endif %}
+</body>
+</html>
