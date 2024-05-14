@@ -1,5 +1,5 @@
 from pyotp import TOTP
-from authentication.models import TopoPassword, TwoFactorAuthCodes
+from authentication.models import TotpPassword, TwoFactorAuthCodes
 from authentication.utils import get_qrcode
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout
@@ -27,7 +27,7 @@ class Enable_2fa(IsHaveNot2FA, View):
 class VerifyEnable_2fa(IsHaveNot2FA, View):
     template_name = 'authentication/verify_2fa.html'
     def post(self, request):
-        totp = TOTP(TopoPassword.objects.get(user=request.user).secret_key)
+        totp = TOTP(TotpPassword.objects.get(user=request.user).secret_key)
         code = request.POST.get('code')
         if totp.verify(code):
             TwoFactorAuthCodes.create_codes(request.user)
@@ -49,7 +49,7 @@ class Verify_2fa(IsHave2FA, View):
         if not username:
             return redirect('login')
         user = get_object_or_404(CustomUser, username=username)
-        totp = TOTP(TopoPassword.objects.get(user=user).secret_key)
+        totp = TOTP(TotpPassword.objects.get(user=user).secret_key)
         code = request.POST.get('code')
         if totp.verify(code):
             login(request, user)
@@ -77,12 +77,12 @@ class Disable_2fa(IsHave2FA, LoginRequiredMixin, View):
     
     def post(self, request):
         user = request.user
-        totp = TOTP(TopoPassword.objects.get(user=user).secret_key)
+        totp = TOTP(TotpPassword.objects.get(user=user).secret_key)
         code = request.POST.get('code')
         if totp.verify(code):
             TwoFactorAuthCodes.delete_codes(user)
             user.disable_factor_auth()
-            TopoPassword.objects.filter(user=user).delete()
+            TotpPassword.objects.filter(user=user).delete()
         return render(request, 'authentication/disable_2fa.html')  
         
 

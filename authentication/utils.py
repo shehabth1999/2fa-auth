@@ -1,12 +1,14 @@
 import pyotp, qrcode, io, os
 import qrcode
-from authentication.models import TopoPassword
+from authentication.models import TotpPassword
 from django.conf import settings
+from rest_framework_simplejwt.tokens import RefreshToken
+
 
 def get_qrcode(user):
-    TopoPassword.objects.filter(user=user).delete()
+    TotpPassword.objects.filter(user=user).delete()
     totp_secret = pyotp.random_base32()
-    TopoPassword.objects.create(user=user, secret_key=totp_secret)
+    TotpPassword.objects.create(user=user, secret_key=totp_secret)
     otp_auth_url = pyotp.totp.TOTP(totp_secret).provisioning_uri(user.username, issuer_name='Django')
     img = qrcode.make(otp_auth_url)
     buffer = io.BytesIO()
@@ -51,3 +53,10 @@ def generate_qr_code(request):
     # Return the URL of the saved image
     img_url = os.path.join(settings.MEDIA_URL, 'qr_codes', 'elquser.png')
     return img_url
+
+
+def generate_jwt_tokens(user):
+    refresh = RefreshToken.for_user(user)
+    access_token = str(refresh.access_token)
+    refresh_token = str(refresh)
+    return access_token, refresh_token

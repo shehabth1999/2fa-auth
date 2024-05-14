@@ -5,6 +5,8 @@ from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 import shortuuid
 from django.utils import timezone
+import secrets
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, username, password=None, **extra_fields):
@@ -91,9 +93,21 @@ class TwoFactorAuthCodes(models.Model):
     def get_codes(cls, user) -> list:
         return list(cls.objects.filter(user=user).values_list('code', flat=True))
 
-class TopoPassword(models.Model):
+class TotpPassword(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='TOTP')
     secret_key = models.CharField(max_length=50)      
+    image_data = models.BinaryField(null=True)
+    token = models.CharField(max_length=50, blank=True, null=True, unique=True)
 
     def __str__(self) -> str:
         return f'{self.user.username} secret key'
+    
+    def generate_token(self):
+        token = secrets.token_hex(32)
+        self.token = token
+        self.save()
+        return token
+    
+    def delete_token(self):
+        self.token = None
+        self.save
