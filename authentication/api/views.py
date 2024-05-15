@@ -7,6 +7,8 @@ from authentication.api.permissions import IsHaveNot2FAPermission, IsHave2FAPerm
 from pyotp import TOTP
 from authentication.models import TotpPassword, TwoFactorAuthCodes
 from rest_framework_simplejwt.views import TokenObtainPairView
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -28,6 +30,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
 class Enable_2fa(APIView):
     permission_classes = [IsHaveNot2FAPermission]
+    @method_decorator(cache_page(100))
     def get(self, request):
         user = request.user
         qr_code_url , secret_key = get_qrcode(user)

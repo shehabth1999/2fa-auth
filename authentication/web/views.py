@@ -11,9 +11,12 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from authentication.web.mixins import IsHave2FA , IsHaveNot2FA
 from django.views.generic import TemplateView
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 
 
 class Enable_2fa(IsHaveNot2FA, View):
+    @method_decorator(cache_page(100))
     def get(self, request):
         user = request.user
         qr_code_url , secret_key = get_qrcode(user)

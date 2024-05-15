@@ -96,7 +96,6 @@ class TwoFactorAuthCodes(models.Model):
 class TotpPassword(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='TOTP')
     secret_key = models.CharField(max_length=50)      
-    image_data = models.BinaryField(null=True)
     token = models.CharField(max_length=50, blank=True, null=True, unique=True)
 
     def __str__(self) -> str:

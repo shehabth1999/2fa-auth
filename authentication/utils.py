@@ -27,32 +27,32 @@ def get_qrcode(user):
     return qr_code_url, totp_secret
 
 
-def generate_qr_code(request):
-    # Facebook URL
-    facebook_url = "https://maps.app.goo.gl/Ruru9mWwnxLW5XT76"
+# def generate_qr_code(request):
+#     # Facebook URL
+#     facebook_url = "https://maps.app.goo.gl/Ruru9mWwnxLW5XT76"
 
-    # Create QR code instance
-    qr = qrcode.QRCode(
-        version=1,
-        error_correction=qrcode.constants.ERROR_CORRECT_L,
-        box_size=10,
-        border=4,
-    )
-    # Add Facebook URL to the QR code
-    qr.add_data(facebook_url)
-    qr.make(fit=True)
+#     # Create QR code instance
+#     qr = qrcode.QRCode(
+#         version=1,
+#         error_correction=qrcode.constants.ERROR_CORRECT_L,
+#         box_size=10,
+#         border=4,
+#     )
+#     # Add Facebook URL to the QR code
+#     qr.add_data(facebook_url)
+#     qr.make(fit=True)
 
-    # Create image from the QR code
-    img = qr.make_image(fill_color="#0074D9", back_color="white")
+#     # Create image from the QR code
+#     img = qr.make_image(fill_color="#0074D9", back_color="white")
 
-    # Save the image to the media directory
-    media_root = settings.MEDIA_ROOT
-    img_path = os.path.join(media_root, 'qr_codes', 'elquser.png')
-    img.save(img_path, format="PNG")
+#     # Save the image to the media directory
+#     media_root = settings.MEDIA_ROOT
+#     img_path = os.path.join(media_root, 'qr_codes', 'elquser.png')
+#     img.save(img_path, format="PNG")
 
-    # Return the URL of the saved image
-    img_url = os.path.join(settings.MEDIA_URL, 'qr_codes', 'elquser.png')
-    return img_url
+#     # Return the URL of the saved image
+#     img_url = os.path.join(settings.MEDIA_URL, 'qr_codes', 'elquser.png')
+#     return img_url
 
 
 def generate_jwt_tokens(user):
